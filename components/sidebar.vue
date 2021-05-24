@@ -168,13 +168,13 @@ export default {
     };
   },
   methods: {
-    addEvent(event) {
-     event.preventDefault();
-     console.log(event);
-     if (this.form.address) {
-       this.$store.dispatch("addUser", this.form);
-     }
-    },
+    // addEvent(event) {
+    //  event.preventDefault();
+    //  console.log(event);
+    //  if (this.form.address) {
+    //    this.$store.dispatch("addUser", this.form);
+    //  }
+    // },
   },
 };
 </script>
