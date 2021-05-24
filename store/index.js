@@ -4,7 +4,7 @@
 
 export const state = () => ({
  user: {},
- events: {}
+ events: []
 })
 
 // Here We define the name of moudles and Implement it to store.
@@ -15,16 +15,22 @@ export const modules = {
 // Actions
 
 export const actions = {
-  addUser({ commit }, form) {
+  addUser({ commit }, event) {
     const user = {
-      name: form.username,
-      email: form.email
+      name: event.username,
+      email: event.email
     }
-    let events = []
-    events.push(form) 
+    
+  //  const event = {
+  //   time: "",
+  //   date: "",
+  //   title: "",
+  //   location: "",
+  //   address: "",
+  //  }
     
     commit('ADD_USER', user)
-    commit('ADD_EVENT', events)
+    commit('ADD_EVENT', event)
   },
 }
 
@@ -34,7 +40,9 @@ export const mutations = {
     state.user = payload
   },
   ADD_EVENT(state, payload) {
-    state.events = payload
+    let events = state.events
+    events.push(payload) 
+    state.events = events
   },
 }
 
