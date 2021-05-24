@@ -42,7 +42,7 @@
         <input
           class="tw-py-2 tw-px-3 tw-rounded-lg tw-border-2  focus:tw-outline-none focus:tw-ring-2 focus:tw-border-transparent tw-w-full"
           type="text"
-          v-model="form.event"
+          v-model="form.title"
           placeholder="Event Title"
         />
       </div>
@@ -74,14 +74,19 @@
         width="290px"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-            v-model="form.time"
-            label="Picker in dialog"
-            prepend-icon="mdi-clock-time-four-outline"
-            readonly
+          <div
+        class="grid grid-cols-1  tw-mt-3 tw-border-purple-600 tw-border-2 tw-rounded-lg"
+      >
+        <input
+          class="tw-py-2 tw-px-3 tw-rounded-lg tw-border-2  focus:tw-outline-none focus:tw-ring-2 focus:tw-border-transparent tw-w-full"
+          type="text"
+          readonly
             v-bind="attrs"
             v-on="on"
-          ></v-text-field>
+          v-model="form.time"
+          placeholder="Event time"
+        />
+      </div>
         </template>
         <v-time-picker
           v-if="modal2"
@@ -99,9 +104,9 @@
           </v-btn>
         </v-time-picker>
       </v-dialog>
-      <div class="tw-flex tw-items-center tw-justify-center">
+      <div class="tw-flex tw-items-center tw-justify-center tw-mt-5">
         <div
-          @click="form.date = ''"
+          @click="form.date == ''"
           class="tw-items-center tw-flex tw-cursor-pointer tw-mr-3 hover:tw-shadow-lg tw-transition tw-w-12 tw-h-12 tw-rounded-xl tw-justify-center tw-bg-gray-400"
         >
           <svg
@@ -118,8 +123,8 @@
           </svg>
           <span> </span>
         </div>
-        <div
-          class="tw-cursor-pointer tw-w-3/4 tw-shadow-md hover:tw-shadow-lg tw-bg-purple-600 tw-text-white tw-h-12 tw-rounded-lg tw-flex tw-items-center tw-justify-center hover:tw-bg-purple-700"
+        <div @click="addEvent"
+          class="tw-cursor-pointer tw tw-w-3/4 tw-shadow-md hover:tw-shadow-lg tw-bg-purple-600 tw-text-white tw-h-12 tw-rounded-lg tw-flex tw-items-center tw-justify-center hover:tw-bg-purple-700"
         >
           <span class="">
             <!-- <v-progress-circular
@@ -129,7 +134,7 @@
             width="3"
           ></v-progress-circular> -->
 
-            Create account</span
+            Create event</span
           >
         </div>
       </div>
@@ -150,11 +155,17 @@ export default {
           email: '',
           time: '',
           date: '',
-          event: '',
+          title: '',
           location: '',
           address: '',
       }
     };
+  },
+  methods: {
+    addEvent(){
+      console.log("Event");
+      this.$store.dispatch('addUser', this.form)
+    }
   }
 };
 </script>

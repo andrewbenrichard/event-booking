@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div
+   <div v-if="events.length">
+      <div
       v-for="event in events"
       :key="event.index"
       class="tw-bg-white animate__animated  animate__fadeInUp tw-mt-4 tw-font-bold tw-text-sm tw-max-h-14 tw-shadow-xl tw-w-full tw-h-14 tw-rounded-xl tw-p-4 tw-grid tw-grid-cols-5 tw-gap-2 tw-items-center hover:tw-shadow-2xl tw-cursor-pointer tw-transition hover:tw-text-purple-500"
@@ -125,16 +126,25 @@
         </div>
       </div>
     </div>
+   </div>
+   <div v-else>
+     <h3 class="tw-text-lg tw-text-black tw-font-bold tw-mb-2">
+       No events found
+     </h3>
+   </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
-    events: {
-      type: Array | Object,
-      default: null
-    }
+  },
+  computed: {
+    ...mapGetters({
+      events: 'getEvents',
+    }),
   }
 };
 </script>
