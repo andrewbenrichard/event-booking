@@ -21,17 +21,16 @@ export const actions = {
       email: event.email
     }
     
-  //  const event = {
-  //   time: "",
-  //   date: "",
-  //   title: "",
-  //   location: "",
-  //   address: "",
-  //  }
-    
     commit('ADD_USER', user)
     commit('ADD_EVENT', event)
   },
+
+  deleteEvent({ commit }, events, index) {
+    let data = events
+    data.splice(index, 1)
+    commit('UPDATE_EVENTS_ARRAY', data)
+  },
+
 }
 
 // Mutations
@@ -42,7 +41,13 @@ export const mutations = {
   ADD_EVENT(state, payload) {
     let events = state.events
     events.push(payload) 
-    state.events = events
+    state.events = JSON.parse(JSON.stringify(events))
+  },
+  UPDATE_EVENTS_ARRAY(state, payload) {
+    let data = state.events
+    data.splice(payload, 1)
+    console.log(data);
+    state.events = JSON.parse(JSON.stringify(data))
   },
 }
 

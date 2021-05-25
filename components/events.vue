@@ -3,12 +3,12 @@
     <client-only>
       <v-dialog v-model="eventDialog" width="500">
         <v-card class="tw-relative">
-          <div
-            class="tw-h-24 tw-flex tw-items-center tw-justify-center "
-          >
-          <p class="tw-font-extrabold tw-text-gray-700"> {{ event.details.title }}</p>
+          <div class="tw-h-24 tw-flex tw-items-center tw-justify-center">
+            <p class="tw-font-extrabold tw-text-gray-700">
+              {{ event.details.title }}
+            </p>
           </div>
-     
+
           <div class="tw-flex tw-flex-col tw-mt-7 tw-px-7">
             <div class="tw-flex tw-items-center">
               <div
@@ -71,7 +71,10 @@
                 </svg>
               </div>
               <p class="tw-text-gray-600 tw-mt-5 tw-ml-5 tw-font-medium">
-                {{ event.details.location }} - <a :href="'http://'+event.details.address">{{event.details.address}}</a>
+                {{ event.details.location }} -
+                <a :href="'http://' + event.details.address">{{
+                  event.details.address
+                }}</a>
               </p>
             </div>
           </div>
@@ -128,7 +131,6 @@
       <div
         v-for="(event, index) in events"
         :key="index"
-        @click="toggleDialog(event, index)"
         class="tw-bg-white animate__animated animate__fadeInUp tw-mt-4 tw-font-bold tw-text-sm tw-max-h-14 tw-shadow-xl tw-w-full tw-h-14 tw-rounded-xl tw-p-4 tw-grid tw-grid-cols-5 tw-gap-2 tw-items-center hover:tw-shadow-2xl tw-cursor-pointer tw-transition hover:tw-text-purple-500"
       >
         <div class="tw-text-xs tw-w-full">
@@ -205,7 +207,8 @@
             </svg>
           </div>
           <div
-            class="tw-w-8 tw-mr-2 tw-h-8 tw-rounded-full tw-text-center tw-bg-red-200 tw-flex tw-justify-center tw-items-center"
+            @click="deleteEvent(index)"
+            class="tw-w-8 tw-mr-2 hover:tw-shadow-xl tw-h-8 tw-rounded-full tw-text-center tw-bg-red-200 tw-flex tw-justify-center tw-items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -222,31 +225,20 @@
           </div>
 
           <div
+          @click="toggleDialog(event, index)"
             class="tw-w-8 tw-h-8 tw-rounded-full tw-text-center tw-bg-yellow-200 tw-flex tw-justify-center tw-items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              enable-background="new 0 0 24 24"
-              height="18px"
+              height="24px"
               viewBox="0 0 24 24"
-              width="18px"
+              width="24px"
               fill="#000000"
             >
-              <g><rect fill="none" height="24" width="24" /></g>
-              <g>
-                <g>
-                  <g>
-                    <path
-                      d="M11,12l-6-1.5V7.01l8.87,3.73c0.94-0.47,2-0.75,3.13-0.75c0.1,0,0.19,0.01,0.28,0.01L3,4v16l7-2.95c0-0.02,0-0.03,0-0.05 c0-0.8,0.14-1.56,0.39-2.28L5,16.99V13.5L11,12z"
-                    />
-                  </g>
-                  <g>
-                    <path
-                      d="M17,12c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5S19.76,12,17,12z M17,20l-3-3l0.71-0.71l1.79,1.79V14h1v4.09l1.79-1.79 L20,17L17,20z"
-                    />
-                  </g>
-                </g>
-              </g>
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z"
+              />
             </svg>
           </div>
         </div>
@@ -272,6 +264,7 @@ export default {
         details: {},
         id: null,
       },
+      localEvents: []
     };
   },
   computed: {
@@ -279,11 +272,22 @@ export default {
       events: "getEvents",
     }),
   },
+  watch:{
+    events(){
+      this.localEvents = this.events
+    }
+  },
   methods: {
     toggleDialog(event, index) {
       this.event.id = index;
       this.event.details = event;
       this.eventDialog = true;
+    },
+    deleteEvent(index) {
+      this.$store.commit("UPDATE_EVENTS_ARRAY", index);
+      // let evensssts = this.localEvents
+      // evensssts.splice(index, 1)
+      // console.log(evensssts);
     },
   },
 };
