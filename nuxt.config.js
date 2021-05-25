@@ -30,6 +30,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/ICal.js', mode: 'client' },
+
   ],
   css: ['@/assets/main.scss'],
 

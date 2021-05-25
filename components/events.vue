@@ -83,29 +83,25 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="#6d28d9" icon class="tw-text-white">
+            <v-btn
+              color="#6d28d9"
+              @click="downloadIcs"
+              icon
+              class="tw-text-white"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 enable-background="new 0 0 24 24"
-                height="18px"
+                height="24px"
                 viewBox="0 0 24 24"
-                width="18px"
+                width="24px"
                 fill="#000000"
               >
                 <g><rect fill="none" height="24" width="24" /></g>
                 <g>
-                  <g>
-                    <g>
-                      <path
-                        d="M3,21l3.75,0L17.81,9.94l-3.75-3.75L3,17.25L3,21z M5,18.08l9.06-9.06l0.92,0.92L5.92,19L5,19L5,18.08z"
-                      />
-                    </g>
-                    <g>
-                      <path
-                        d="M18.37,3.29c-0.39-0.39-1.02-0.39-1.41,0l-1.83,1.83l3.75,3.75l1.83-1.83c0.39-0.39,0.39-1.02,0-1.41L18.37,3.29z"
-                      />
-                    </g>
-                  </g>
+                  <path
+                    d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M17,11l-1.41-1.41L13,12.17V4h-2v8.17L8.41,9.59L7,11l5,5 L17,11z"
+                  />
                 </g>
               </svg>
             </v-btn>
@@ -225,7 +221,7 @@
           </div>
 
           <div
-          @click="toggleDialog(event, index)"
+            @click="toggleDialog(event, index)"
             class="tw-w-8 tw-h-8 tw-rounded-full tw-text-center tw-bg-yellow-200 tw-flex tw-justify-center tw-items-center"
           >
             <svg
@@ -254,6 +250,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import moment from "moment";
 
 export default {
   props: {},
@@ -264,7 +261,7 @@ export default {
         details: {},
         id: null,
       },
-      localEvents: []
+      localEvents: [],
     };
   },
   computed: {
@@ -272,10 +269,10 @@ export default {
       events: "getEvents",
     }),
   },
-  watch:{
-    events(){
-      this.localEvents = this.events
-    }
+  watch: {
+    events() {
+      this.localEvents = this.events;
+    },
   },
   methods: {
     toggleDialog(event, index) {
@@ -288,6 +285,55 @@ export default {
       // let evensssts = this.localEvents
       // evensssts.splice(index, 1)
       // console.log(evensssts);
+    },
+    downloadIcs() {
+      this.$ics.removeAllEvents();
+      const language = "en-us";
+      const subject = this.event.details.title;
+      const description = subject + " with " + this.event.details.username;
+      const location = this.event.details.location;
+      const begin = moment
+        .utc(this.event.details.date + " " + this.event.details.time)
+        .format("YYYY-MM-DD HH:mm:ss");
+      const stop = moment
+        .utc(this.event.details.date + " " + this.event.details.time)
+        .format("YYYY-MM-DD HH:mm:ss");
+      const url = this.event.details.address;
+      const organizer = {
+        name: this.event.details.username,
+        email: this.event.details.email,
+      };
+
+      this.$ics.addEvent(
+        language,
+        subject,
+        description,
+        location,
+        begin,
+        stop,
+        url,
+        organizer
+      );
+      console.log(this.$ics.calendar());
+      // eslint-disable-next-line camelcase
+      const ics_data = this.$ics.calendar().replace(/^\s+|\s+$/g, "");
+
+      // eslint-disable-next-line camelcase
+      const temp_ics_link = document.createElement("a");
+      temp_ics_link.setAttribute(
+        "href",
+        "data:text/calendar;charset=utf8," + encodeURIComponent(ics_data)
+      );
+      temp_ics_link.setAttribute("download", subject);
+
+      temp_ics_link.style.display = "none";
+      document.body.appendChild(temp_ics_link);
+
+      temp_ics_link.click();
+
+      document.body.removeChild(temp_ics_link);
+
+      // this.$ics.download(subject)
     },
   },
 };
