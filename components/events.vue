@@ -174,7 +174,8 @@
           {{ event.location }}
         </div>
         <div class="tw-text-center tw-w-full tw-flex tw-items-center">
-          <div
+          <nuxt-link :to="'event/'+index">
+            <div
             class="tw-w-8 tw-mr-2 tw-h-8 tw-rounded-full tw-text-center tw-bg-gray-200 tw-flex tw-justify-center tw-items-center"
           >
             <svg
@@ -202,6 +203,7 @@
               </g>
             </svg>
           </div>
+          </nuxt-link>
           <div
             @click="deleteEvent(index)"
             class="tw-w-8 tw-mr-2 hover:tw-shadow-xl tw-h-8 tw-rounded-full tw-text-center tw-bg-red-200 tw-flex tw-justify-center tw-items-center"
@@ -270,9 +272,9 @@ export default {
     }),
   },
   watch: {
-    events() {
-      this.localEvents = this.events;
-    },
+    // events() {
+    //   this.localEvents = this.events;
+    // },
   },
   methods: {
     toggleDialog(event, index) {
@@ -291,7 +293,7 @@ export default {
       const language = "en-us";
       const subject = this.event.details.title;
       const description = subject + " with " + this.event.details.username;
-      const location = this.event.details.location;
+      const location = this.event.details.location + ' ' + this.event.details.address;
       const begin = moment
         .utc(this.event.details.date + " " + this.event.details.time)
         .format("YYYY-MM-DD HH:mm:ss");

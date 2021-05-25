@@ -15,15 +15,6 @@ export const modules = {
 // Actions
 
 export const actions = {
-  addUser({ commit }, event) {
-    const user = {
-      name: event.username,
-      email: event.email
-    }
-    
-    commit('ADD_USER', user)
-    commit('ADD_EVENT', event)
-  },
 
   deleteEvent({ commit }, events, index) {
     let data = events
@@ -36,8 +27,14 @@ export const actions = {
 // Mutations
 export const mutations = {
   ADD_USER(state, payload) {
-    state.user = payload
+    const user = {
+      name: payload.username,
+      email: payload.email
+    }
+    
+    state.user = JSON.parse(JSON.stringify(user))
   },
+
   ADD_EVENT(state, payload) {
     let events = state.events
     events.push(payload) 

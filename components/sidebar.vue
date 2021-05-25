@@ -27,27 +27,6 @@
           <input
             class="tw-py-2 tw-px-3 tw-rounded-lg tw-border-2 focus:tw-outline-none focus:tw-ring-2 focus:tw-border-transparent tw-w-full"
             type="text"
-            v-model="form.username"
-            placeholder="Full name"
-          />
-        </div>
-
-        <div
-          class="grid grid-cols-1 tw-mt-3 tw-border-purple-600 tw-border-2 tw-rounded-lg"
-        >
-          <input
-            class="tw-py-2 tw-px-3 tw-rounded-lg tw-border-2 focus:tw-outline-none focus:tw-ring-2 focus:tw-border-transparent tw-w-full"
-            type="email"
-            v-model="form.email"
-            placeholder="email"
-          />
-        </div>
-        <div
-          class="grid grid-cols-1 tw-mt-3 tw-border-purple-600 tw-border-2 tw-rounded-lg"
-        >
-          <input
-            class="tw-py-2 tw-px-3 tw-rounded-lg tw-border-2 focus:tw-outline-none focus:tw-ring-2 focus:tw-border-transparent tw-w-full"
-            type="text"
             v-model="form.title"
             placeholder="Event Title"
           />
@@ -206,7 +185,7 @@ export default {
   methods: {
     addEvent() {
       try {
-        this.$store.dispatch("addUser", this.form);
+        this.$store.commit("ADD_EVENT", this.form);
       } catch (err) {
         console.log(err);
       }
