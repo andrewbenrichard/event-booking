@@ -103,18 +103,18 @@
               </svg>
             </v-btn>
             <v-btn color="#6d28d9" icon @click="eventDialog = false">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="24px"
-                viewBox="0 0 24 24"
-                width="24px"
-                fill="#000000"
-              >
-                <path d="M0 0h24v24H0V0z" fill="none" />
-                <path
-                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
-                />
-              </svg>
+             <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 0 24 24"
+              width="24px"
+              fill="#f37a7b"
+            >
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M14.12 10.47L12 12.59l-2.13-2.12-1.41 1.41L10.59 14l-2.12 2.12 1.41 1.41L12 15.41l2.12 2.12 1.41-1.41L13.41 14l2.12-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z"
+              />
+            </svg>
             </v-btn>
           </v-card-actions>
         </div>
@@ -122,6 +122,7 @@
 
 <script>
 import moment from "moment";
+import { mapGetters } from 'vuex'
 
 export default {
     props: {
@@ -130,23 +131,28 @@ export default {
             default: Object
         }
     },
+    computed: {
+    ...mapGetters({
+      user: 'getUser',
+    }),
+  },
     methods:{
          downloadIcs() {
       this.$ics.removeAllEvents();
       const language = "en-us";
-      const subject = this.event.details.title;
-      const description = subject + " with " + this.event.details.username;
-      const location = this.event.details.location + ' ' + this.event.details.address;
+      const subject = this.event.title;
+      const description = subject + " with " + this.user.name;
+      const location = this.event.location + ' ' + this.event.address;
       const begin = moment
-        .utc(this.event.details.date + " " + this.event.details.time)
+        .utc(this.event.date + " " + this.event.time)
         .format("YYYY-MM-DD HH:mm:ss");
       const stop = moment
-        .utc(this.event.details.date + " " + this.event.details.time)
+        .utc(this.event.date + " " + this.event.time)
         .format("YYYY-MM-DD HH:mm:ss");
-      const url = this.event.details.address;
+      const url = this.event.address;
       const organizer = {
-        name: this.event.details.username,
-        email: this.event.details.email,
+        name: this.user.name,
+        email: this.user.email,
       };
 
       this.$ics.addEvent(
@@ -179,6 +185,10 @@ export default {
       document.body.removeChild(temp_ics_link);
 
       // this.$ics.download(subject)
+    },
+
+    deleteEvent() {
+      this.$store.commit("UPDATE_EVENTS_ARRAY", this.$route.params.slug);
     },
     }
 }

@@ -148,16 +148,6 @@ export default {
         location: "",
         address: "",
       },
-      days: ["monday", "tuesday", "friday"],
-      fake: {
-        username: "Andrew Richard",
-        email: "andrewbenrichard@gmail.com",
-        time: "",
-        date: "2021-05-27",
-        title: "",
-        location: "",
-        address: "https://zoom.com",
-      },
       availableDates: "",
     };
   },

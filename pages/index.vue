@@ -90,6 +90,16 @@ export default {
     };
   },
   layouts: "default",
+  computed: {
+    ...mapGetters({
+      user: 'getUser',
+    }),
+  },
+  mounted(){
+    if (this.user.name) {
+      this.dialog = false
+    }
+  },
   methods: {
     addUser() {
      if (this.form.username && this.form.email) {

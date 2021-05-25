@@ -1,6 +1,7 @@
 // Queries
 // import getUserAppointment from './apolloQueries/getUserAppointment'
 
+export const strict = false
 
 export const state = () => ({
  user: {},
@@ -40,11 +41,21 @@ export const mutations = {
     events.push(payload) 
     state.events = JSON.parse(JSON.stringify(events))
   },
+
   UPDATE_EVENTS_ARRAY(state, payload) {
     let data = state.events
     data.splice(payload, 1)
     console.log(data);
     state.events = JSON.parse(JSON.stringify(data))
+  },
+
+  UPDATE_SINGLE_EVENTS(state, payload) {
+
+    let allEvents = state.events
+
+    allEvents[payload.index] = payload.event 
+    
+    state.events = JSON.parse(JSON.stringify(allEvents))
   },
 }
 

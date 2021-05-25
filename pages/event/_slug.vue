@@ -1,5 +1,6 @@
 <template>
   <div class="tw-mx-5">
+    <div>
     <nuxt-link
       to="/"
       class="tw-items-center tw-mt-6 tw-flex tw-cursor-pointer tw-mr-3 hover:tw-shadow-lg tw-transition tw-w-12 tw-h-12 tw-rounded-xl tw-justify-center tw-bg-gray-400"
@@ -17,8 +18,10 @@
         />
       </svg>
     </nuxt-link>
+    
+    </div>
     <div class="tw-flex tw-w-full tw-mt-11">
-      <div class="tw-w-2/3 animate__animated animate__fadeInUp">
+      <div class="tw-w-2/3 animate__animated animate__fadeInUp tw-relative">
         <SingleEvent :event="form" />
       </div>
       <div class="tw-pl-12 tw-w-full">
@@ -28,27 +31,6 @@
           </h4>
           <v-form @submit.prevent="updateEvent">
             <div class="tw-mt-3 animate__animated animate__fadeInUp">
-              <div
-                class="grid grid-cols-1 tw-mt-3 tw-border-purple-600 tw-border-2 tw-rounded-lg"
-              >
-                <input
-                  class="tw-py-2 tw-px-3 tw-rounded-lg tw-border-2 focus:tw-outline-none focus:tw-ring-2 focus:tw-border-transparent tw-w-full"
-                  type="text"
-                  v-model="form.username"
-                  placeholder="Full name"
-                />
-              </div>
-
-              <div
-                class="grid grid-cols-1 tw-mt-3 tw-border-purple-600 tw-border-2 tw-rounded-lg"
-              >
-                <input
-                  class="tw-py-2 tw-px-3 tw-rounded-lg tw-border-2 focus:tw-outline-none focus:tw-ring-2 focus:tw-border-transparent tw-w-full"
-                  type="email"
-                  v-model="form.email"
-                  placeholder="email"
-                />
-              </div>
               <div
                 class="grid grid-cols-1 tw-mt-3 tw-border-purple-600 tw-border-2 tw-rounded-lg"
               >
@@ -79,6 +61,45 @@
                   placeholder="Address / Url"
                 />
               </div>
+              <v-dialog
+                ref="dateDialog"
+                v-model="modal"
+                :return-value.sync="form.date"
+                persistent
+                width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <div
+                    class="grid grid-cols-1 tw-mt-3 tw-border-purple-600 tw-border-2 tw-rounded-lg"
+                  >
+                    <input
+                      class="tw-py-2 tw-px-3 tw-rounded-lg tw-border-2 focus:tw-outline-none focus:tw-ring-2 focus:tw-border-transparent tw-w-full"
+                      type="text"
+                      v-model="form.date"
+                      label="Picker in dialog"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      placeholder="Event date"
+                      v-bind="attrs"
+                      v-on="on"
+                    />
+                  </div>
+                </template>
+
+                <v-date-picker v-model="form.date" scrollable>
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="modal = false">
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.dateDialog.save(form.date)"
+                  >
+                    OK
+                  </v-btn>
+                </v-date-picker>
+              </v-dialog>
               <v-dialog
                 ref="dialog"
                 v-model="modal2"
@@ -140,8 +161,10 @@ export default {
   data() {
     return {
       event: {},
+      modal: false,
       modal2: false,
       time: "",
+      editMode: false,
       form: {
         username: "Andrew R",
         email: "andrewbenrichard@gmail.com",
@@ -157,12 +180,23 @@ export default {
   mounted() {
     this.singleEvent();
   },
+  watch:{
+    form(){
+      this.editMode = true
+    }
+  },
   methods: {
-    updateEvent() {},
+    updateEvent() {
+      const singleEvent = {
+        index: this.$route.params.slug,
+        event: this.form
+      }
+      this.$store.commit("UPDATE_SINGLE_EVENTS", this.singleEvent);
+
+    },
     singleEvent() {
-      const data = this.$store.getters.getEvents[this.$route.params.slug];
-      this.form = data
-      console.log(this.event);
+      const data = this.$store.getters.getEvents;
+      this.form = data[this.$route.params.slug];
     },
   },
 };

@@ -269,6 +269,7 @@ export default {
   computed: {
     ...mapGetters({
       events: "getEvents",
+      user: "getUser",
     }),
   },
   watch: {
@@ -284,15 +285,12 @@ export default {
     },
     deleteEvent(index) {
       this.$store.commit("UPDATE_EVENTS_ARRAY", index);
-      // let evensssts = this.localEvents
-      // evensssts.splice(index, 1)
-      // console.log(evensssts);
     },
     downloadIcs() {
       this.$ics.removeAllEvents();
       const language = "en-us";
       const subject = this.event.details.title;
-      const description = subject + " with " + this.event.details.username;
+      const description = subject + " with " + this.user.name;
       const location = this.event.details.location + ' ' + this.event.details.address;
       const begin = moment
         .utc(this.event.details.date + " " + this.event.details.time)
@@ -302,8 +300,8 @@ export default {
         .format("YYYY-MM-DD HH:mm:ss");
       const url = this.event.details.address;
       const organizer = {
-        name: this.event.details.username,
-        email: this.event.details.email,
+        name: this.user.name,
+        email: this.user.email,
       };
 
       this.$ics.addEvent(
