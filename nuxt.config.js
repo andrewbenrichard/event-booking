@@ -31,6 +31,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/ICal.js', mode: 'client' },
+    { src: '~/plugins/eventCal.js' },
 
   ],
   css: ['@/assets/main.scss'],
@@ -77,5 +78,8 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    extend(config) {
+      config.resolve.alias['vue'] = 'vue/dist/vue.common'
+  }
   }
 }

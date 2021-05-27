@@ -51,42 +51,64 @@
             placeholder="Address / Url"
           />
         </div>
-        <v-dialog
-          ref="dialog"
-          v-model="modal2"
+        <v-menu
+          ref="menu"
+          v-model="modalStart"
+          :close-on-content-click="false"
+          :nudge-right="40"
           :return-value.sync="time"
-          persistent
-          width="290px"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="290px"
         >
           <template v-slot:activator="{ on, attrs }">
-            <div
-              class="grid grid-cols-1 tw-mt-3 tw-border-purple-600 tw-border-2 tw-rounded-lg"
-            >
-              <input
-                class="tw-py-2 tw-px-3 tw-rounded-lg tw-border-2 focus:tw-outline-none focus:tw-ring-2 focus:tw-border-transparent tw-w-full"
-                type="text"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-                v-model="form.time"
-                placeholder="Event time"
-              />
-            </div>
+            <v-text-field
+              v-model="form.start"
+              label="Event start time"
+              prepend-icon="mdi-clock-time-four-outline"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
           </template>
           <v-time-picker
-            v-if="modal2"
-            v-model="form.time"
-            header-color="#6d28d9"
-            color="#000000"
+            v-if="modalStart"
+            v-model="form.start"
             full-width
-          >
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="modal2 = false"> Cancel </v-btn>
-            <v-btn text color="primary" @click="$refs.dialog.save(time)">
-              OK
-            </v-btn>
-          </v-time-picker>
-        </v-dialog>
+            @click:minute="$refs.menu.save(time)"
+          ></v-time-picker>
+        </v-menu>
+
+        <v-menu
+          ref="endMenu"
+          v-model="modalEnd"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          :return-value.sync="time"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="form.end"
+              label="Event end time"
+              prepend-icon="mdi-clock-time-four-outline"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-time-picker
+            v-if="modalEnd"
+            v-model="form.end"
+            full-width
+            @click:minute="$refs.endMenu.save(time)"
+          ></v-time-picker>
+        </v-menu>
+
         <div class="tw-flex tw-items-center tw-justify-center tw-mt-5">
           <div
             @click="form.date = ''"
@@ -130,6 +152,8 @@
 
 <script>
 import moment from "moment";
+import "moment-timezone";
+
 import { mapGetters } from "vuex";
 
 export default {
@@ -137,12 +161,14 @@ export default {
     return {
       disabled: true,
       date: "",
-      modal2: false,
+      modalStart: false,
+      modalEnd: false,
       time: "",
       form: {
         username: "",
         email: "",
-        time: "",
+        start: "",
+        end: "",
         date: "",
         title: "",
         location: "",
@@ -160,11 +186,11 @@ export default {
     events() {
       for (var i = 0; i < this.availableDates.length; i++) {
         if (this.availableDates[i] == this.form.date) {
-         this.availableDates.splice(i, 1)
+          this.availableDates.splice(i, 1);
           break;
         }
       }
-      this.allowedDates()
+      this.allowedDates();
     },
   },
   mounted() {

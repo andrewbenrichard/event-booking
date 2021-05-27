@@ -1,24 +1,23 @@
 <template>
   <div class="tw-mx-5">
     <div>
-    <nuxt-link
-      to="/"
-      class="tw-items-center tw-mt-6 tw-flex tw-cursor-pointer tw-mr-3 hover:tw-shadow-lg tw-transition tw-w-12 tw-h-12 tw-rounded-xl tw-justify-center tw-bg-gray-400"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="24px"
-        viewBox="0 0 24 24"
-        width="24px"
-        fill="#000000"
+      <nuxt-link
+        to="/"
+        class="tw-items-center tw-mt-6 tw-flex tw-cursor-pointer tw-mr-3 hover:tw-shadow-lg tw-transition tw-w-12 tw-h-12 tw-rounded-xl tw-justify-center tw-bg-gray-400"
       >
-        <path d="M0 0h24v24H0V0z" fill="none" />
-        <path
-          d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
-        />
-      </svg>
-    </nuxt-link>
-    
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24px"
+          viewBox="0 0 24 24"
+          width="24px"
+          fill="#000000"
+        >
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+      </nuxt-link>
     </div>
     <div class="tw-flex tw-w-full tw-mt-11">
       <div class="tw-w-2/3 animate__animated animate__fadeInUp tw-relative">
@@ -168,7 +167,8 @@ export default {
       form: {
         username: "Andrew R",
         email: "andrewbenrichard@gmail.com",
-        time: "06:30",
+        start: "06:30",
+        end: "06:30",
         date: "2021-05-27",
         title: "demo",
         location: "dwee",
@@ -180,19 +180,18 @@ export default {
   mounted() {
     this.singleEvent();
   },
-  watch:{
-    form(){
-      this.editMode = true
-    }
+  watch: {
+    form() {
+      this.editMode = true;
+    },
   },
   methods: {
     updateEvent() {
       const singleEvent = {
         index: this.$route.params.slug,
-        event: this.form
-      }
+        event: this.form,
+      };
       this.$store.commit("UPDATE_SINGLE_EVENTS", this.singleEvent);
-
     },
     singleEvent() {
       const data = this.$store.getters.getEvents;
