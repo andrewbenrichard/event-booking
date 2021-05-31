@@ -59,7 +59,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'http://localhost:4000', // Used as fallback if no runtime config is provided
+    baseURL: 'https://schedulerserver01.herokuapp.com/', // Used as fallback if no runtime config is provided
   },
   
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
