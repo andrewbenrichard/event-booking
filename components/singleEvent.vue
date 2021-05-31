@@ -46,7 +46,7 @@
           </svg>
         </div>
         <p class="tw-text-gray-600 tw-mt-5 tw-ml-5 tw-font-medium">
-          {{ event.start }} - {{event.end}}
+          {{ event.start }} - {{ event.end }}
         </p>
       </div>
       <div class="tw-flex tw-items-center">
@@ -78,7 +78,7 @@
         :location="'http://' + event.address"
         :start="eventStartFun(event.date, event.start)"
         :end="eventEndFun(event.date, event.end)"
-        :details="event.title+' Event with '+user.name"
+        :details="event.title + ' Event with ' + user.name"
         inline-template
       >
         <div class="tw-flex tw-flex-col">
@@ -112,22 +112,7 @@
       <v-spacer></v-spacer>
 
       <v-btn color="#6d28d9" @click="downloadIcs" class="tw-text-white">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          enable-background="new 0 0 24 24"
-          height="24px"
-          viewBox="0 0 24 24"
-          width="24px"
-          fill="#ffffff"
-        >
-          <g><rect fill="none" height="24" width="24" /></g>
-          <g>
-            <path
-              d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M17,11l-1.41-1.41L13,12.17V4h-2v8.17L8.41,9.59L7,11l5,5 L17,11z"
-            />
-          </g>
-        </svg>
-        <span class="tw-text-white">Download .Ics</span>
+        <span class="tw-text-white">Send to my email</span>
       </v-btn>
       <v-btn color="#6d28d9" icon @click="eventDialog = false">
         <svg
@@ -158,78 +143,87 @@ export default {
       default: Object,
     },
   },
-  data(){
+  data() {
     return {
       date_log: Date,
-    }
+    };
   },
   computed: {
     ...mapGetters({
       user: "getUser",
     }),
   },
-  mounted() {
-    
-  },
+  mounted() {},
   methods: {
-    eventStartFun(EventDate, EventTime){
-      var now = new Date(EventDate+' '+EventTime+ ' UTC').toISOString();
+    eventStartFun(EventDate, EventTime) {
+      var now = new Date(EventDate + " " + EventTime + " UTC").toISOString();
       console.log([moment(now)._d]);
-      return moment(now)._d
+      return moment(now)._d;
     },
-    eventEndFun(EventDate, EventTime){
-      var now = new Date(EventDate+' '+EventTime+ ' UTC').toISOString();
+    eventEndFun(EventDate, EventTime) {
+      var now = new Date(EventDate + " " + EventTime + " UTC").toISOString();
       console.log([moment(now)._d]);
-      return moment(now)._d
+      return moment(now)._d;
     },
-    downloadIcs() {
+    cleanDateTime(val) {
+      var remove_space = val.replace(" ", "T");
+      var remove_dash = remove_space.replace(/[^a-zA-Z0-9]/g, "");
+
+      return remove_dash;
+    },
+    cleanTimezone(val) {
+      const str = val + " "
+      let split_str = str.split("(").pop(); 
+      split_str = split_str.replace(')', "")
+      return split_str;
+    },
+    async downloadIcs() {
+      /* get timezone  */
+
+      const start_date = moment(
+        this.event.date + " " + this.event.start
+      ).format("YYYY-MM-DD HH:mm:ss");
+      const end_date = moment(this.event.date + " " + this.event.start).format(
+        "YYYY-MM-DD HH:mm:ss"
+      );
+      var zone_name = moment.tz.guess();
+      var breaker_timezone = moment.tz(zone_name);
+
+      /* set the function variable */
       this.$ics.removeAllEvents();
       const language = "en-us";
       const subject = this.event.title;
       const description = subject + " with " + this.user.name;
       const location = this.event.location + " " + this.event.address;
-      const begin = moment
-        .utc(this.event.date + " " + this.event.time)
-        .format("YYYY-MM-DD HH:mm:ss");
-      const stop = moment
-        .utc(this.event.date + " " + this.event.time)
-        .format("YYYY-MM-DD HH:mm:ss");
+      const begin = this.cleanDateTime(start_date);
+      const stop = this.cleanDateTime(end_date);
       const url = this.event.address;
+      const timezone = this.cleanTimezone(breaker_timezone._d);
       const organizer = {
         name: this.user.name,
         email: this.user.email,
       };
 
-      this.$ics.addEvent(
-        language,
-        subject,
-        description,
-        location,
-        begin,
-        stop,
-        url,
-        organizer
-      );
-      console.log(this.$ics.calendar());
-      // eslint-disable-next-line camelcase
-      const ics_data = this.$ics.calendar().replace(/^\s+|\s+$/g, "");
-
-      // eslint-disable-next-line camelcase
-      const temp_ics_link = document.createElement("a");
-      temp_ics_link.setAttribute(
-        "href",
-        "data:text/calendar;charset=utf8," + encodeURIComponent(ics_data)
-      );
-      temp_ics_link.setAttribute("download", subject);
-
-      temp_ics_link.style.display = "none";
-      document.body.appendChild(temp_ics_link);
-
-      temp_ics_link.click();
-
-      document.body.removeChild(temp_ics_link);
-
-      // this.$ics.download(subject)
+      /* node mail data */
+      const eventData = {
+        language: language,
+        subject: subject,
+        description: description,
+        location: location,
+        begin: begin,
+        stop: stop,
+        url: url,
+        timezone: timezone,
+        organizer: organizer,
+      }
+       const data = await this.$axios
+            .$post("/user", eventData)
+            .then(res => {
+              console.log(res);
+            })
+            .catch(error => {
+              console.log(error);
+            });
     },
 
     deleteEvent() {
@@ -239,5 +233,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

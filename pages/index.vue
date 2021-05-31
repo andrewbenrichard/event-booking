@@ -101,8 +101,10 @@ export default {
     }
   },
   methods: {
-    addUser() {
+   async addUser() {
      if (this.form.username && this.form.email) {
+      
+       /* local vuex storing */
         try {
         this.$store.commit("ADD_USER", this.form);
         this.dialog = false
@@ -114,6 +116,8 @@ export default {
        this.error = "Please fill all form"
      }
     },
+
+
   },
 };
 </script>

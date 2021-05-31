@@ -44,6 +44,7 @@ export default {
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/axios',
   ],
 
   tailwindcss: {
@@ -57,6 +58,10 @@ export default {
   modules: [
   ],
 
+  axios: {
+    baseURL: 'http://localhost:4000', // Used as fallback if no runtime config is provided
+  },
+  
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
