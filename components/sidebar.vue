@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-w-2/6">
+  <div class="md:tw-w-2/5 tw-w-full">
     <div
       class="animate__animated animate__fadeInUp tw-mt-4 tw-shadow-md hover:tw-shadow-lg tw-bg-purple-600 tw-text-white tw-h-12 tw-rounded-lg tw-flex tw-items-center tw-justify-center hover:tw-bg-purple-700"
     >
@@ -15,6 +15,7 @@
         :allowed-dates="allowedDates"
         v-model="form.date"
         no-title
+        full-width
         color="#6d28d9"
         scrollable
       />

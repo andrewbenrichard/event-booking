@@ -1,8 +1,8 @@
 <template>
-  <div class="tw-mx-5">
-    <div class="tw-flex tw-w-full tw-mt-11">
+  <div class="md:tw-mx-5">
+    <div class="tw-flex tw-w-full tw-mt-11 tw-flex-col md:tw-flex-row">
       <Sidebar />
-      <div class="tw-pl-12 tw-w-full">
+      <div class="md:tw-pl-12 tw-w-full">
         <div>
           <h4 class="tw-text-lg tw-text-black tw-font-bold tw-mb-2">
             Scheduled events

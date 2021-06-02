@@ -19,11 +19,11 @@
         </svg>
       </nuxt-link>
     </div>
-    <div class="tw-flex tw-w-full tw-mt-11">
-      <div class="tw-w-2/3 animate__animated animate__fadeInUp tw-relative">
+    <div class="tw-flex tw-w-full tw-mt-11 sm:tw-flex-row tw-flex-col">
+      <div class="sm:tw-w-2/3 tw-w-full animate__animated animate__fadeInUp tw-relative">
         <SingleEvent :event="form" />
       </div>
-      <div class="tw-pl-12 tw-w-full">
+      <div class="sm:tw-pl-12 tw-w-full">
         <div>
           <h4 class="tw-text-lg tw-text-black tw-font-bold tw-mb-2">
             Edit Event
