@@ -202,6 +202,7 @@ export default {
     addEvent() {
       try {
         this.$store.commit("ADD_EVENT", this.form);
+        console.log(this.form);
       } catch (err) {
         console.log(err);
       }

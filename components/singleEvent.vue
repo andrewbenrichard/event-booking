@@ -72,38 +72,6 @@
           <a :href="'http://' + event.address">{{ event.address }}</a>
         </p>
       </div>
-
-      <add-to-calendar
-        :title="event.title"
-        :location="'http://' + event.address"
-        :start="eventStartFun(event.date, event.start)"
-        :end="eventEndFun(event.date, event.end)"
-        :details="event.title + ' Event with ' + user.name"
-        inline-template
-      >
-        <div class="tw-flex tw-flex-col">
-          <google-calendar id="google-calendar">
-            <div class="tw-flex tw-items-center tw-mb-3">
-              <img src="/google.png" alt="" class="tw-w-7 tw-mr-2" />
-              <h5 class="tw-text-black">Add to Google calendar</h5>
-            </div>
-          </google-calendar>
-
-          <microsoft-calendar id="microsoft-calendar">
-            <div class="tw-flex tw-items-center tw-mb-3">
-              <img src="/microsoft.png" alt="" class="tw-w-7 tw-mr-2" />
-              <h5 class="tw-text-black">Add to Microsoft live calendar</h5>
-            </div>
-          </microsoft-calendar>
-
-          <office365-calendar id="office365-calendar">
-            <div class="tw-flex tw-items-center tw-mb-3">
-              <img src="/outlook.png" alt="" class="tw-w-7 tw-mr-2" />
-              <h5 class="tw-text-black">Add to Office365 outlook calendar</h5>
-            </div>
-          </office365-calendar>
-        </div>
-      </add-to-calendar>
     </div>
 
     <v-divider></v-divider>
@@ -111,22 +79,13 @@
     <v-card-actions>
       <v-spacer></v-spacer>
 
-      <v-btn color="#6d28d9" @click="downloadIcs" class="tw-text-white">
+      <v-btn
+        :loading="isLoading"
+        color="#6d28d9"
+        @click="downloadIcs"
+        class="tw-text-white"
+      >
         <span class="tw-text-white">Send to my email</span>
-      </v-btn>
-      <v-btn color="#6d28d9" icon @click="eventDialog = false">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="24px"
-          viewBox="0 0 24 24"
-          width="24px"
-          fill="#f37a7b"
-        >
-          <path d="M0 0h24v24H0V0z" fill="none" />
-          <path
-            d="M14.12 10.47L12 12.59l-2.13-2.12-1.41 1.41L10.59 14l-2.12 2.12 1.41 1.41L12 15.41l2.12 2.12 1.41-1.41L13.41 14l2.12-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z"
-          />
-        </svg>
       </v-btn>
     </v-card-actions>
   </div>
@@ -145,6 +104,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       date_log: Date,
     };
   },
@@ -172,14 +132,14 @@ export default {
       return remove_dash;
     },
     cleanTimezone(val) {
-      const str = val + " "
-      let split_str = str.split("(").pop(); 
-      split_str = split_str.replace(')', "")
+      const str = val + " ";
+      let split_str = str.split("(").pop();
+      split_str = split_str.replace(")", "");
       return split_str;
     },
     async downloadIcs() {
       /* get timezone  */
-
+      this.isLoading = true;
       const start_date = moment(
         this.event.date + " " + this.event.start
       ).format("YYYY-MM-DD HH:mm:ss");
@@ -215,15 +175,17 @@ export default {
         url: url,
         timezone: timezone,
         organizer: organizer,
-      }
-       const data = await this.$axios
-            .$post("/user", eventData)
-            .then(res => {
-              console.log(res);
-            })
-            .catch(error => {
-              console.log(error);
-            });
+      };
+      const data = await this.$axios
+        .$post("/user", eventData)
+        .then((res) => {
+          this.isLoading = false;
+          console.log(res);
+        })
+        .catch((error) => {
+          this.isLoading = false;
+          console.log(error);
+        });
     },
 
     deleteEvent() {
